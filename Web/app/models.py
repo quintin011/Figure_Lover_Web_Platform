@@ -1,36 +1,10 @@
-from flask import Markup
-import datetime
-import math
-from flask_appbuilder import Model
-from flask_appbuilder.models.mixins import AuditMixin, FileColumn, ImageColumn, UserExtensionMixin, BaseMixin
-from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Float
-"""
-
-You can use the extra Flask-AppBuilder fields and Mixin's
-
-AuditMixin will add automatic timestamp of created and modified by who
+from sqlalchemy.orm import relationship
+from flask_appbuilder import Model
+import datetime
 
 
-"""
-mindate = datetime.date(datetime.MINYEAR, 1, 1)
-
-class ContactGroup(Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True, nullable=False)
-
-    def extra_col(self):
-        return "EXTRA {0}".format(self.id)
-
-    def extra_col2(self):
-        return Markup("<h2>" + self.name + "</h2>")
-
-
-    def __repr__(self):
-        return self.name
-
-
-class ProductManufacturer(Model):
+class Country(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
 
@@ -38,29 +12,7 @@ class ProductManufacturer(Model):
         return self.name
 
 
-class ProductModel(Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique = True, nullable=False)
-    product_manufacturer_id = Column(Integer, ForeignKey('product_manufacturer.id'), nullable=False)
-    product_manufacturer = relationship("ProductManufacturer")
-
-    def __repr__(self):
-        return self.name
-
-
-class Product(Model):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique = True, nullable=False)
-    product_manufacturer_id = Column(Integer, ForeignKey('product_manufacturer.id'), nullable=False)
-    product_manufacturer = relationship("ProductManufacturer")
-    product_model_id = Column(Integer, ForeignKey('product_model.id'), nullable=False)
-    product_model = relationship("ProductModel")
-
-    def __repr__(self):
-        return self.name
-
-
-class Gender(Model):
+class PoliticalType(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique = True, nullable=False)
 
@@ -68,38 +20,22 @@ class Gender(Model):
         return self.name
 
 
-def test():
-        return math.pi - 1.0
-
-
-class FloatModel(Model):
+class CountryStats(Model):
     id = Column(Integer, primary_key=True)
-    value = Column(Float, nullable = False, default=test)
-
+    stat_date = Column(Date, nullable=True)
+    population = Column(Float)
+    unemployed = Column(Float)
+    college = Column(Float)
+    country_id = Column(Integer, ForeignKey('country.id'), nullable=False)
+    country = relationship("Country")
+    political_type_id = Column(Integer, ForeignKey('political_type.id'), nullable=False)
+    political_type = relationship("PoliticalType")
 
     def __repr__(self):
-        return self.value
-
-
-class Contact(Model):
-    id = Column(Integer, primary_key=True)
-    name =  Column(String(150), unique = True, nullable=False)
-    address = Column(String(564))
-    birthday = Column(Date, nullable=True)
-    personal_phone = Column(String(20))
-    personal_celphone = Column(String(20))
-    contact_group_id = Column(Integer, ForeignKey('contact_group.id'), nullable=False)
-    contact_group = relationship("ContactGroup")
-    gender_id = Column(Integer, ForeignKey('gender.id'), nullable=False)
-    gender = relationship("Gender")
-
-    def __repr__(self):
-        return "%s : %s\n" % (self.name, self.contact_group)
+        return "{0}:{1}:{2}:{3}".format(self.country, self.political_type, self.population, self.college)
 
     def month_year(self):
-        date = self.birthday or mindate
-        return datetime.datetime(date.year, date.month, 1) or mindate
+        return datetime.datetime(self.stat_date.year, self.stat_date.month, 1)
 
-    def year(self):
-        date = self.birthday or mindate
-        return datetime.datetime(date.year, 1, 1)
+    def country_political(self):
+        return str(self.country) + ' - ' + str(self.political_type)

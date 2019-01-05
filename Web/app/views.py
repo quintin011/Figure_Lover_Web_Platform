@@ -1,206 +1,142 @@
-import logging, calendar
-from flask import render_template, redirect, flash, url_for, Markup
-from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder import ModelView, GroupByChartView, aggregate_count, action, expose
+import random
+import logging
+import datetime
+import calendar
+from flask_appbuilder.models.datamodel import SQLAModel
+from flask_appbuilder.views import ModelView
+from flask_appbuilder.charts.views import DirectChartView, DirectByChartView, GroupByChartView
+from .models import CountryStats, Country, PoliticalType
 from app import appbuilder, db
-from flask_appbuilder._compat import as_unicode
-from flask_appbuilder.charts.views import GroupByChartView
-from flask_appbuilder.models.group import aggregate_count
-from flask_babel import lazy_gettext as _
-from flask_appbuilder.models.mixins import UserExtensionMixin
-from .models import ContactGroup, Gender, Contact, FloatModel, Product, ProductManufacturer, ProductModel
-from .forms import TestForm
-from flask_appbuilder.views import SimpleFormView, MultipleView
-from flask_appbuilder.models.generic.interface import GenericInterface
-from flask_appbuilder.widgets import FormVerticalWidget, FormInlineWidget, FormHorizontalWidget, ShowBlockWidget
-from flask_appbuilder.widgets import ListThumbnail, ListWidget
-"""
-    Create your Views::
-    class MyModelView(ModelView):
-        datamodel = SQLAInterface(MyModel)
-    Next, register your Views::
-    appbuilder.add_view(MyModelView, "My View", icon="fa-folder-open-o", category="My Category", category_icon='fa-envelope')
-"""
-def fill_gender():
+from flask_appbuilder.models.group import aggregate_count, aggregate_sum, aggregate_avg
+
+log = logging.getLogger(__name__)
+
+
+def fill_data():
+    countries = ['Portugal', 'Germany', 'Spain', 'France', 'USA', 'China', 'Russia', 'Japan']
+    politicals = ['Democratic', 'Authorative']
+    for country in countries:
+        c = Country(name=country)
+        try:
+            db.session.add(c)
+            db.session.commit()
+        except Exception as e:
+            log.error("Update ViewMenu error: {0}".format(str(e)))
+            db.session.rollback()
+    for political in politicals:
+        c = PoliticalType(name=political)
+        try:
+            db.session.add(c)
+            db.session.commit()
+        except Exception as e:
+            log.error("Update ViewMenu error: {0}".format(str(e)))
+            db.session.rollback()
     try:
-        db.session.add(Gender(name='Male'))
-        db.session.add(Gender(name='Female'))
-        db.session.commit()
-    except:
+        for x in range(1, 20):
+            cs = CountryStats()
+            cs.population = random.randint(1, 100)
+            cs.unemployed = random.randint(1, 100)
+            cs.college = random.randint(1, 100)
+            year = random.choice(range(1900, 2012))
+            month = random.choice(range(1, 12))
+            day = random.choice(range(1, 28))
+            cs.stat_date = datetime.datetime(year, month, day)
+            cs.country_id = random.randint(1, len(countries))
+            cs.political_type_id = random.randint(1, len(politicals))
+            db.session.add(cs)
+            db.session.commit()
+    except Exception as e:
+        log.error("Update ViewMenu error: {0}".format(str(e)))
         db.session.rollback()
 
 
-class TestForm(SimpleFormView):
-    form = TestForm
-    form_title = 'This is my Test Form'
-    default_view = 'this_form_get'
-    message = 'My form submitted'
-
-    def form_post(self, form):
-        # process form
-        flash(as_unicode(self.message), 'info')
+class CountryStatsModelView(ModelView):
+    datamodel = SQLAModel(CountryStats)
+    list_columns = ['country', 'stat_date', 'population', 'unemployed', 'college']
 
 
-class ProductModelView(ModelView):
-    datamodel = SQLAInterface(ProductModel)
+class CountryModelView(ModelView):
+    datamodel = SQLAModel(Country)
 
 
-class ProductView(ModelView):
-    datamodel = SQLAInterface(Product)
-    list_columns = ['name','product_manufacturer', 'product_model']
-    add_columns = ['name','product_manufacturer', 'product_model']
-    edit_columns = ['name','product_manufacturer', 'product_model']
-    add_widget = FormVerticalWidget
+class PoliticalTypeModelView(ModelView):
+    datamodel = SQLAModel(PoliticalType)
 
 
-class ProductManufacturerView(ModelView):
-    datamodel = SQLAInterface(ProductManufacturer)
-    related_views = [ProductModelView, ProductView]
-
-
-class MyListWidget(ListWidget):
-     template = 'widgets/list.html'
-
-class ContactModelView2(ModelView):
-    datamodel = SQLAInterface(Contact)
-    list_columns = ['name', 'personal_celphone', 'birthday', 'contact_group.name']
-    add_form_query_rel_fields = {'gender':[['name',FilterStartsWith,'F']]}
-    list_template = 'mylist.html'
-    list_widget = MyListWidget
-    extra_args = {'widget_arg':'WIDGET'}
-
-    @expose('/jsonexp')
-    def jsonexp(self):
-        active_filters = self._filters.get_filters_values_tojson()
-        return self.render_template('list_angulajs.html',
-                                    api_url=url_for(self.__class__.__name__ + '.api'),
-                                    label_columns=self._label_columns_json(),
-                                    active_filters=active_filters)
-
-
-class ContactModelView(ModelView):
-    datamodel = SQLAInterface(Contact)
-
-    add_widget = FormVerticalWidget
-    show_widget = ShowBlockWidget
-
-    list_columns = ['name', 'personal_celphone', 'birthday', 'contact_group.name']
-
-    list_template = 'list_contacts.html'
-    list_widget = ListThumbnail
-    show_template = 'show_contacts.html'
-
-    extra_args = {'extra_arg_obj1': 'Extra argument 1 injected'}
-    base_order = ('name', 'asc')
-
-    show_fieldsets = [
-        ('Summary', {'fields': ['name', 'gender', 'contact_group']}),
-        (
-            'Personal Info',
-            {'fields': ['address', 'birthday', 'personal_phone', 'personal_celphone'], 'expanded': False}),
-    ]
-
-    add_fieldsets = [
-        ('Summary', {'fields': ['name', 'gender', 'contact_group']}),
-        (
-            'Personal Info',
-            {'fields': ['address', 'birthday', 'personal_phone', 'personal_celphone'], 'expanded': False}),
-    ]
-
-    edit_fieldsets = [
-        ('Summary', {'fields': ['name', 'gender', 'contact_group']}),
-        (
-            'Personal Info',
-            {'fields': ['address', 'birthday', 'personal_phone', 'personal_celphone'], 'expanded': False}),
-    ]
-
-    @action("muldelete", "Delete", Markup("<p>Delete all Really?</p><p>Ok then...</p>"), "fa-rocket")
-    def muldelete(self, items):
-        self.datamodel.delete_all(items)
-        self.update_redirect()
-        return redirect(self.get_redirect())
-
-
-class GroupModelView(ModelView):
-    datamodel = SQLAInterface(ContactGroup)
-    related_views = [ContactModelView]
-    show_template = 'appbuilder/general/model/show_cascade.html'
-    list_columns = ['name', 'extra_col', 'extra_col2']
-
-
-class FloatModelView(ModelView):
-    datamodel = SQLAInterface(FloatModel)
-
-
-class ContactChartView(GroupByChartView):
-    datamodel = SQLAInterface(Contact)
-    chart_title = 'Grouped contacts'
-    label_columns = ContactModelView.label_columns
-    chart_type = 'PieChart'
-
-    definitions = [
-        {
-            'group': 'contact_group.name',
-            'series': [(aggregate_count, 'contact_group')]
-        },
-        {
-            'group': 'gender',
-            'series': [(aggregate_count, 'gender')]
-        }
-    ]
-
-
-class MultipleViewsExp(MultipleView):
-    views = [ContactChartView, GroupModelView]
+class CountryStatsDirectChart(DirectChartView):
+    datamodel = SQLAModel(CountryStats)
+    chart_title = 'Statistics'
+    chart_type = 'LineChart'
+    direct_columns = {'General Stats': ('stat_date', 'population', 'unemployed', 'college')}
+    base_order = ('stat_date', 'asc')
 
 
 def pretty_month_year(value):
     return calendar.month_name[value.month] + ' ' + str(value.year)
 
 
-def pretty_year(value):
-    return str(value.year)
-
-
-class ContactTimeChartView(GroupByChartView):
-    datamodel = SQLAInterface(Contact)
-
-    chart_title = 'Grouped Birth contacts'
-    chart_type = 'AreaChart'
-    label_columns = ContactModelView.label_columns
+class CountryDirectChartView(DirectByChartView):
+    datamodel = SQLAModel(CountryStats)
+    chart_title = 'Direct Data'
+    chart_type = 'ColumnChart'
+    
     definitions = [
         {
-            'group': 'month_year',
-            'formatter': pretty_month_year,
-            'series': [(aggregate_count, 'contact_group')]
-        },
-        {
-            'group': 'year',
-            'formatter': pretty_year,
-            'series': [(aggregate_count, 'contact_group')]
+            #'label': 'Monthly',
+            'group': 'stat_date',
+            'series': ['unemployed',
+                       'college']
         }
     ]
-  
-#Application wide 404 error handler
-@appbuilder.app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html', base_template=appbuilder.base_template, appbuilder=appbuilder), 404
 
-fill_gender()
-appbuilder.add_view(GroupModelView, "List Groups", icon="fa-folder-open-o", category="Contacts",
-                    category_icon='fa-envelope')
-appbuilder.add_view(ContactModelView, "List Contacts", icon="fa-envelope", category="Contacts")
-appbuilder.add_view(ContactModelView2, "List Contacts 2", icon="fa-envelope", category="Contacts")
-appbuilder.add_view(FloatModelView, "List Float Model", icon="fa-envelope", category="Contacts")
-appbuilder.add_view(MultipleViewsExp, "Multiple Views", icon="fa-envelope", category="Contacts")
-appbuilder.add_separator("Contacts")
-appbuilder.add_view(ContactChartView, "Contacts Chart", icon="fa-dashboard", category="Contacts")
-appbuilder.add_view(ContactTimeChartView, "Contacts Birth Chart", icon="fa-dashboard", category="Contacts")
-appbuilder.add_view(ProductManufacturerView, "List Manufacturer", icon="fa-folder-open-o", category="Products",
-                    category_icon='fa-envelope')
-appbuilder.add_view(ProductModelView, "List Models", icon="fa-envelope", category="Products")
-appbuilder.add_view(ProductView, "List Products", icon="fa-envelope", category="Products")
-appbuilder.add_link("ContacModelView_lnk","ContactModelView.add", icon="fa-envelope", label="Add Contact")
-appbuilder.add_view(TestForm, "My form View", icon="fa-group", label='My Test form')
-appbuilder.add_link("Index","MyIndexView.index")
-appbuilder.security_cleanup()
+
+class CountryGroupByChartView(GroupByChartView):
+    datamodel = SQLAModel(CountryStats, db.session)
+    chart_title = 'Statistics'
+    group_by_columns = 'country'
+    definitions = [
+        {
+            'label': 'Country Stat',
+            'group': 'id',
+            'series': [(aggregate_avg, 'unemployed'),
+                       (aggregate_avg, 'population'),
+                       (aggregate_avg, 'college')
+            ]
+        },
+        {
+            #'label': 'Monthly',
+            'group': 'month_year',
+            'formatter': pretty_month_year,
+            'series': [(aggregate_sum, 'unemployed'),
+                       (aggregate_avg, 'population'),
+                       (aggregate_avg, 'college')
+            ]
+        }
+    ]
+    """
+        [{
+            'label': 'String',
+            'group': '<COLNAME>'|'<FUNCNAME>'
+            'formatter: <FUNC>
+            'series': [(<AGGR FUNC>, <COLNAME>|'<FUNCNAME>'),...]
+            }
+        ]
+    """
+
+    #label_columns = {'month_year': 'Month Year', 'country_political': 'Country Political'}
+    group_by_columns = ['country', 'political_type', 'country_political', 'month_year']
+    # ['<COL NAME>']
+    aggregate_by_column = [(aggregate_avg, 'unemployed'), (aggregate_avg, 'population'), (aggregate_avg, 'college')]
+    # [{'aggr_func':<FUNC>,'column':'<COL NAME>'}]
+    formatter_by_columns = {'month_year': pretty_month_year}
+
+
+db.create_all()
+#fill_data()
+appbuilder.add_view(CountryModelView, "List Countries", icon="fa-folder-open-o", category="Statistics")
+appbuilder.add_view(PoliticalTypeModelView, "List Political Types", icon="fa-folder-open-o", category="Statistics")
+appbuilder.add_view(CountryStatsModelView, "List Country Stats", icon="fa-folder-open-o", category="Statistics")
+appbuilder.add_separator("Statistics")
+appbuilder.add_view(CountryStatsDirectChart, "Show Country Chart", icon="fa-dashboard", category="Statistics")
+appbuilder.add_view(CountryGroupByChartView, "Group Country Chart", icon="fa-dashboard", category="Statistics")
+appbuilder.add_view(CountryDirectChartView, "Show Country Chart", icon="fa-dashboard", category="Statistics")

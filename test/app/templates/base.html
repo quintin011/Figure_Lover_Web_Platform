@@ -1,0 +1,250 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/bootstrap.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/bootstrap-theme.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/bootstrap-theme.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/owl.carousel.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('.static',filename='css/animate.min.css')}}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{url_for('.static',filename='js/bootstrap.js')}}"></script>
+    <script src="{{url_for('.static',filename='js/bootstrap.min.js')}}"></script>
+{% endblock %}
+
+{% if title %}
+    <title>{{title}} - Figure Lover</title>
+{% else %}
+    <title>Welcome to Figure Lover</title>
+{% endif %}
+
+{% block navbar %}
+    <div class="header">
+			<div class="header-grid">
+					<div class="container">
+				<div class="header-left animated wow fadeInLeft animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInLeft;">
+					<ul>
+					<li><i class="glyphicon glyphicon-headphones"></i><a href="#">24x7 live support</a></li>
+						<li><i class="glyphicon glyphicon-envelope"></i><a href="quintin011011@gmail.com">damn@gmail.com</a></li>
+						<li><i class="glyphicon glyphicon-earphone"></i>+852</li>
+						
+					</ul>
+				</div>
+				<div class="header-right animated wow fadeInRight animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInRight;">
+				<div class="header-right1 ">
+					<ul>
+                        {% if current_user.is_anonymous %}
+                        <li><i class="glyphicon glyphicon-log-in" ></i><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><i class="glyphicon glyphicon-book" ></i><a href="{{ url_for('register') }}">Register</a></li>
+                        {% else %}
+                        <li><i class="glyphicon glyphicon-user" ></i><a href="{{ url_for('user', username=current_user.username) }}">Profile</a></li>
+                        <li><i class="glyphicon glyphicon glyphicon-log-out" ></i><a href="{{ url_for('logout') }}">Logout</a></li>
+                        {% endif %}
+					</ul>
+					<div class="cart box_1">
+						<a href="checkout.html">
+							<h3> <div class="total">
+								<span class="simpleCart_total">$0.00</span> (<span id="simpleCart_quantity" class="simpleCart_quantity">0</span> items)</div>
+								<img src={{url_for('.static', filename='img/cart.png', mode="fit")}}" alt="" />
+							</h3>
+						</a>
+						<p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+				<div class="header-right2">
+	
+				</div>
+				</div>
+			</div>
+			</div>
+			<div class="container">
+			<div class="logo-nav">
+					<nav class="navbar navbar-default">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header nav_2">
+						<button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						 <div class="navbar-brand logo-nav-left ">
+							<h1 class="animated wow pulse animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: pulse;"><a href="{{ url_for('index') }}">Figure<span> Lover</span></a></h1>
+						</div>
+					</div> 
+					<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+						<ul class="nav navbar-nav">
+							<li class="hactive"><a href="{{ url_for('index') }}" class="act">Home</a></li>
+							<li class="hactive"><a href="{{ url_for('explore') }}" class="act">Explore</a></li>
+							<!-- Mega Menu -->
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Women <b class="caret"></b></a>
+								<ul class="dropdown-menu multi">
+									<div class="row">
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu1</h6>
+												
+												<li><a href="products.html">Accessories</a></li>
+												<li><a href="products.html">Bags</a></li>
+												<li><a href="products.html">Caps &amp; Hats</a></li>
+												<li><a href="products.html">Hoodies &amp; Sweatshirts</a></li>
+										
+											</ul>
+										</div>
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu2</h6>
+												<li><a href="products.html">Jackets &amp; Coats</a></li>
+												<li><a href="products.html">Jeans</a></li>
+												<li><a href="products.html">Jewellery</a></li>
+												<li><a href="products.html">Jumpers &amp; Cardigans</a></li>
+												<li><a href="products.html">Leather Jackets</a></li>
+												<li><a href="products.html">Long Sleeve T-Shirts</a></li>
+
+											</ul>
+										</div>
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu3</h6>
+												<li><a href="products.html">Shirts</a></li>
+												<li><a href="products.html">Shoes, Boots &amp; Trainers</a></li>
+												<li><a href="products.html">Sunglasses</a></li>
+												<li><a href="products.html">Sweatpants</a></li>
+												<li><a href="products.html">Swimwear</a></li>
+												<li><a href="products.html">Trousers &amp; Chinos</a></li>
+
+											</ul>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+									<div class="row-top">
+										<div class="col-sm-6 row1">
+											<a href="products.html"><img src="images/me.jpg" alt="" class="img-responsive"></a>
+										</div>
+										<div class=" col-sm-6 row2">
+											<a href="products.html"><img src="images/me1.jpg" alt="" class="img-responsive"></a>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Men <b class="caret"></b></a>
+								<ul class="dropdown-menu multi multi1">
+									<div class="row">
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu1</h6>
+												
+												<li><a href="products1.html">Accessories</a></li>
+												<li><a href="products1.html">Bags</a></li>
+												<li><a href="products1.html">Caps &amp; Hats</a></li>
+												<li><a href="products1.html">Hoodies &amp; Sweatshirts</a></li>
+										
+											</ul>
+										</div>
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu2</h6>
+												<li><a href="products1.html">Jackets &amp; Coats</a></li>
+												<li><a href="products1.html">Jeans</a></li>
+												<li><a href="products1.html">Jewellery</a></li>
+												<li><a href="products1.html">Jumpers &amp; Cardigans</a></li>
+												<li><a href="products1.html">Leather Jackets</a></li>
+												<li><a href="products1.html">Long Sleeve T-Shirts</a></li>
+
+											</ul>
+										</div>
+										<div class="col-sm-4">
+											<ul class="multi-column-dropdown">
+												<h6>Submenu3</h6>
+												<li><a href="products1.html">Shirts</a></li>
+												<li><a href="products1.html">Shoes, Boots &amp; Trainers</a></li>
+												<li><a href="products1.html">Sunglasses</a></li>
+												<li><a href="products1.html">Sweatpants</a></li>
+												<li><a href="products1.html">Swimwear</a></li>
+												<li><a href="products1.html">Trousers &amp; Chinos</a></li>
+
+											</ul>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+									<div class="row-top">
+										<div class="col-sm-6 row1">
+											<a href="products1.html"><img src="images/me2.jpg" alt="" class="img-responsive"></a>
+										</div>
+										<div class=" col-sm-6 row2">
+											<a href="products1.html"><img src="images/me3.jpg" alt="" class="img-responsive"></a>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</ul>
+							</li>
+							
+							<li><a href="codes.html"> Codes</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+						</ul>
+					</div>
+					</nav>
+				</div>
+				
+		</div>
+	</div>
+{% endblock%}
+
+{% block content %}
+{{super()}}
+{% block footer %}
+<div class="footer">
+		<div class="container">
+		<div class="footer-top">
+		<div class="col-md-9 footer-top1">
+		<h4>Duis aute irure dolor in reprehenderit in voluptate </h4>
+		<p>Duis aute irure dolor in reprehenderit in voluptate velit esse.Excepteur sint occaecat cupidatat 
+						non proident Duis aute irure dolor in reprehenderit in voluptate velit esse</p>
+		</div>
+		<div class="col-md-3 footer-top2">
+		<a href="contact.html">Contact Us</a>
+		</div>
+		<div class="clearfix"> </div>
+		</div>
+			<div class="footer-grids">
+				<div class="col-md-4 footer-grid animated wow fadeInLeft" data-wow-delay=".5s">
+					<h3>About Us</h3>
+					<p>Duis aute irure dolor in reprehenderit in voluptate velit esse.<span>Excepteur sint occaecat cupidatat 
+						non proident, sunt in culpa qui officia deserunt mollit.</span></p>
+				</div>
+				<div class="col-md-4 footer-grid animated wow fadeInLeft" data-wow-delay=".6s">
+					<h3>Contact Info</h3>
+					<ul>
+						<li><i class="glyphicon glyphicon-map-marker" ></i>1234k Avenue, 4th block, <span>New York City.</span></li>
+						<li class="foot-mid"><i class="glyphicon glyphicon-envelope" ></i><a href="mailto:info@example.com">info@example.com</a></li>
+						<li><i class="glyphicon glyphicon-earphone" ></i>+1234 567 567</li>
+					</ul>
+				</div>
+				<div class="col-md-4 footer-grid animated wow fadeInLeft" data-wow-delay=".7s">
+				<h3>Sign up for newsletter </h3>
+				<form>
+					<input type="text" placeholder="Email"  required="">
+					<input type="submit" value="Submit">
+				</form>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="copy-right animated wow fadeInUp" data-wow-delay=".5s">
+				<p>&copy 2016 Classic Style. All rights reserved | Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% endblock %}
+
+
+

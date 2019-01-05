@@ -1,0 +1,58 @@
+2018-12-13 09:36:16,903 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:36:26,867 ERROR: Exception on / [GET] [in /usr/local/lib64/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/routes.py", line 29, in index
+    return render_template('index.html', title='Home', posts=posts)
+  File "/usr/local/lib64/python2.7/site-packages/flask/templating.py", line 135, in render_template
+    context, ctx.app)
+  File "/usr/local/lib64/python2.7/site-packages/flask/templating.py", line 117, in _render
+    rv = template.render(context)
+  File "/usr/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/usr/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/templates/base.html", line 204, in template
+    <div class="footer">
+TemplateSyntaxError: expected token 'end of statement block', got '<'
+2018-12-13 09:37:20,906 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:37:23,642 ERROR: Exception on / [GET] [in /usr/local/lib64/python2.7/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib64/python2.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/routes.py", line 29, in index
+    return render_template('index.html', title='Home', posts=posts)
+  File "/usr/local/lib64/python2.7/site-packages/flask/templating.py", line 135, in render_template
+    context, ctx.app)
+  File "/usr/local/lib64/python2.7/site-packages/flask/templating.py", line 117, in _render
+    rv = template.render(context)
+  File "/usr/local/lib/python2.7/site-packages/jinja2/environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/usr/local/lib/python2.7/site-packages/jinja2/environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/templates/base.html", line 204, in template
+    <div class="footer">
+TemplateSyntaxError: expected token 'end of statement block', got '<'
+2018-12-13 09:41:51,322 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:42:08,309 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:42:23,450 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:43:52,347 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-13 09:44:04,733 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
+2018-12-15 06:02:47,700 INFO: Microblog startup [in /home/ec2-user/environment/Figure_Lover_Web_Platform/test/app/__init__.py:47]
