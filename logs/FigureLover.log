@@ -1,0 +1,37 @@
+2019-01-05 11:19:47,372 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
+2019-01-05 11:25:55,905 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
+2019-01-05 11:26:50,398 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
+2019-01-05 11:38:16,061 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
+2019-01-05 11:50:00,633 ERROR: Exception on /reset_password/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZXNldF9wYXNzd29yZCI6NCwiZXhwIjoxNTQ2NzA3NTI3Ljc0ODc0OTN9.EeZpdBRssLY-2ldgdnTCvPIrJyTZv-Q_3wvPZ7BIB4M [GET] [in /home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py:1761]
+Traceback (most recent call last):
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/osboxes/Figure_Lover_Web_Platform/test/app/routes.py", line 117, in reset_password
+    return render_template('reset_password.html', form=form)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/templating.py", line 134, in render_template
+    return _render(ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/jinja2/environment.py", line 869, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/jinja2/environment.py", line 830, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/jinja2/environment.py", line 804, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/jinja2/loaders.py", line 113, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/templating.py", line 58, in get_source
+    return self._get_source_fast(environment, template)
+  File "/home/osboxes/Figure_Lover_Web_Platform/venv1/lib/python3.6/site-packages/flask/templating.py", line 86, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: reset_password.html
+2019-01-05 11:54:06,711 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
+2019-01-05 12:06:17,118 INFO: FigureLover startup [in /home/osboxes/Figure_Lover_Web_Platform/test/app/__init__.py:49]
